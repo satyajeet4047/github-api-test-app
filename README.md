@@ -10,7 +10,7 @@ contributors
 * ProgressDialogs shown while loading data.
 * Add a comment to the opened image.
 * Use of Constraint layouts, RecyclerView, GridLayout.
-* Generic error toast shown in case for API failures.
+* Generic error dialog implemented in case for API failures.
 
 
 
