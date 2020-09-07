@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.githubapp.ui.repolist.RepoListViewModel
 import com.example.githubapp.di.util.ViewModelKey
 import com.example.githubapp.ui.factory.ViewModelFactory
+import com.example.githubapp.ui.repodetail.RepoDetailViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -16,7 +17,11 @@ abstract class ViewModelFactoryModule {
     @Binds
     @IntoMap
     @ViewModelKey(RepoListViewModel::class)
-    internal abstract fun bindRepoListViewModel(repoListViewModel: RepoListViewModel) : ViewModel
+    internal abstract fun bindRepoListViewModel(repoListViewModel: RepoListViewModel) : ViewModel @Binds
+
+    @IntoMap
+    @ViewModelKey(RepoDetailViewModel::class)
+    internal abstract fun bindRepoDetailViewModel(repoDetailViewModel: RepoDetailViewModel) : ViewModel
 
 
     @Binds

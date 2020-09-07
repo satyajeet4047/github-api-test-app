@@ -1,9 +1,10 @@
 package com.example.githubapp.data.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
- data class GitNode(
+data class GitNode(
 
     @SerializedName("id")
     val id : Int,
@@ -19,9 +20,21 @@ import com.google.gson.annotations.SerializedName
 
     @SerializedName("owner")
     val owner: Owner
-)
+) : Serializable
 
 data class Owner(
+
+    @SerializedName("login")
+    val login: String,
+
+    @SerializedName("avatar_url")
+    val avatarUrl : String
+) : Serializable
+
+
+data class ContributorNode(
+    @SerializedName("login")
+    val login : String,
 
     @SerializedName("avatar_url")
     val avatarUrl : String

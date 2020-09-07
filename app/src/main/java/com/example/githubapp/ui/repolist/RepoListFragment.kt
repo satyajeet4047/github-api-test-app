@@ -6,14 +6,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubapp.R
 import com.example.githubapp.data.model.GitNode
+import com.example.githubapp.util.ImageLoaderUtil
 import com.example.githubapp.util.RequestStatus
 import dagger.android.*
 import dagger.android.support.AndroidSupportInjection
@@ -21,25 +25,23 @@ import kotlinx.android.synthetic.main.repo_list_fragment.*
 import javax.inject.Inject
 
 
-class RepoListFragment : Fragment() {
+class RepoListFragment : Fragment(), RepoListAdapter.ItemCLickedListener {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
+    var navController: NavController? = null
+
+    @Inject lateinit var  imageLoaderUtil : ImageLoaderUtil
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val mainViewModel: RepoListViewModel by lazy {
+    private val viewModel: RepoListViewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory)[RepoListViewModel::class.java]
     }
 
     private lateinit var adapter: RepoListAdapter
+
     private lateinit var alertDialog : AlertDialog
-
-
-
-    companion object {
-        fun newInstance() = RepoListFragment()
-    }
 
 
     override fun onAttach(context: Context) {
@@ -53,22 +55,27 @@ class RepoListFragment : Fragment() {
         return inflater.inflate(R.layout.repo_list_fragment, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupUI()
         setupObservables()
-        mainViewModel.fetchData()
+        viewModel.fetchData()
     }
 
     private fun setupObservables() {
 
-        mainViewModel.getResponse().observe(viewLifecycleOwner, Observer<List<GitNode>>{
-                apiResponse : List<GitNode>? ->
-            apiResponse?.let { adapter.setData(it as ArrayList<GitNode>) }
+        viewModel.getResponse().observe(viewLifecycleOwner, Observer<List<GitNode>>{
+                api : List<GitNode>? ->
+            api?.let { adapter.setData(it as ArrayList<GitNode>) }
 
         })
 
-        mainViewModel.getStatus().observe(this, Observer<RequestStatus> {
+        viewModel.getStatus().observe(this, Observer<RequestStatus> {
                 requestStatus: RequestStatus? ->
             when(requestStatus){
                 RequestStatus.IN_PROGRESS ->  onRequestInProgress()
@@ -85,14 +92,28 @@ class RepoListFragment : Fragment() {
     private fun setupUI() {
 
         rv_repo_list.layoutManager = LinearLayoutManager(activity)
-        adapter = RepoListAdapter()
+        adapter = RepoListAdapter(imageLoaderUtil)
         rv_repo_list.addItemDecoration(
             DividerItemDecoration(
                 rv_repo_list.context,
                 (rv_repo_list.layoutManager as LinearLayoutManager).orientation
             )
         )
+        adapter.setUpListener(object : RepoListAdapter.ItemCLickedListener{
+
+            override fun onItemClicked(gitNode: GitNode) {
+               val bundle = bundleOf(
+                   "gitNode" to gitNode)
+
+                navController!!.navigate(
+                    R.id.action_repoListFragment_to_repoDetailFragment2,
+                    bundle)
+
+            }
+
+        })
         rv_repo_list.adapter = adapter
+
     }
 
 
@@ -133,10 +154,12 @@ class RepoListFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         alertDialog?.dismiss()
-        mainViewModel.onDestroy()
+        viewModel.onDestroy()
     }
 
-
+    override fun onItemClicked(gitNode: GitNode) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
 }

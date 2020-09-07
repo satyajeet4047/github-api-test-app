@@ -2,10 +2,7 @@ package com.example.githubapp.di.component
 
 import android.app.Application
 import com.example.githubapp.GithubApp
-import com.example.githubapp.di.module.ContextModule
-import com.example.githubapp.di.module.MainActivityBindingModule
-import com.example.githubapp.di.module.NetworkModule
-import com.example.githubapp.di.module.ViewModelFactoryModule
+import com.example.githubapp.di.module.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -19,7 +16,7 @@ import javax.inject.Singleton
  */
 @Singleton
 @Component(modules = [ContextModule::class, AndroidSupportInjectionModule::class,  MainActivityBindingModule::class,
-    ViewModelFactoryModule::class,NetworkModule::class])
+    ViewModelFactoryModule::class,NetworkModule::class, ImageLoaderModule::class])
 interface ApplicationComponent : AndroidInjector<DaggerApplication>{
 
     fun inject(githubApp: GithubApp)

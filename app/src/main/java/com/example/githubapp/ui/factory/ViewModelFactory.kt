@@ -22,7 +22,7 @@ class ViewModelFactory @Inject constructor(private val creators: MutableMap<Clas
 
         val creator = creators?.get(modelClass) ?:
         creators?.asIterable()?.firstOrNull { modelClass.isAssignableFrom(it.key) }?.value
-        ?: throw IllegalArgumentException("unknown model class $modelClass")
+        ?: throw IllegalArgumentException("unknown model class $modelClass") as Throwable
 
         return try {
             creator.get() as T
