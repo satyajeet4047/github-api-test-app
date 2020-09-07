@@ -1,27 +1,20 @@
-package com.example.githubapp.ui.repolist
+package com.example.githubapp.ui.adapater
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubapp.R
 import com.example.githubapp.data.model.GitNode
 import com.example.githubapp.util.ImageLoaderUtil
-import com.squareup.picasso.Callback
-import com.squareup.picasso.NetworkPolicy
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.repo_list_item.*
 import kotlinx.android.synthetic.main.repo_list_item.view.*
-import javax.inject.Inject
 
-class RepoListAdapter constructor(private val imageLoaderUtil : ImageLoaderUtil) : RecyclerView.Adapter<RepoListAdapter.DataViewHolder>() {
+class CommonRepoListAdapter constructor(private val imageLoaderUtil : ImageLoaderUtil, private val isRowClickable : Boolean) : RecyclerView.Adapter<CommonRepoListAdapter.DataViewHolder>() {
 
 
     private var list: ArrayList<GitNode> = ArrayList()
-
-    lateinit var mItemCLicked: ItemCLickedListener
+    private lateinit var mItemCLicked: ItemCLickedListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.repo_list_item, parent, false)
@@ -31,14 +24,15 @@ class RepoListAdapter constructor(private val imageLoaderUtil : ImageLoaderUtil)
 
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
 
-        holder.itemView.setOnClickListener {
+       if(isRowClickable)
+       { holder.itemView.setOnClickListener {
             mItemCLicked.let {
                 mItemCLicked.onItemClicked(list[position])
             }
 
         }
+       }
         imageLoaderUtil.loadImage(holder.itemView.iv_user_profile,list[position].owner.avatarUrl)
-
         holder.bind(list[position])
     }
 

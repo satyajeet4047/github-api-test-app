@@ -14,6 +14,10 @@ class NetworkServiceManager @Inject constructor(private val networkService: Netw
        return  networkService.fetchRepoList()
    }
 
+    fun fetchRepositoryByContributor(userName : String) : Observable<List<GitNode>>{
+       return  networkService.fetchRepositoryByContributor(userName)
+   }
+
 
     fun fetchContributors(login:String,repoName : String, accessToken : String)
             : Observable<List<ContributorNode>>{

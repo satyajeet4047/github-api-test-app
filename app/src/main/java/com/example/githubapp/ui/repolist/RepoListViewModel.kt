@@ -30,19 +30,23 @@ class RepoListViewModel @Inject constructor(private val networkServiceManager: N
     /*
         Method used for fetching data from api
      */
-    fun fetchData() {
+    fun fetchTopRepos() {
 
-        status.value = RequestStatus.IN_PROGRESS
-        compositeDisposable.add(networkServiceManager.fetchRepoList()
-            .flatMapIterable { x -> x }
-            .take(20)
-            .toList()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onSuccess,this::onFailure)
-        )
+        if(status.value == RequestStatus.SUCCESS) {
+            return
+        }
+            status.value = RequestStatus.IN_PROGRESS
+            compositeDisposable.add(networkServiceManager.fetchRepoList()
+                .flatMapIterable { x -> x }
+                .take(20)
+                .toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onSuccess, this::onFailure)
+            )
 
     }
+
 
     private fun onSuccess(response: List<GitNode>){
         this.response.value = response

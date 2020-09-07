@@ -1,9 +1,9 @@
-package com.example.githubapp.ui.repodetail
+package com.example.githubapp.ui.contributordetail
+
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
 import com.example.githubapp.data.NetworkServiceManager
-import com.example.githubapp.data.model.ContributorNode
 import com.example.githubapp.data.model.GitNode
 import com.example.githubapp.util.RequestStatus
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -11,18 +11,15 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class RepoDetailViewModel @Inject constructor(private val networkServiceManager: NetworkServiceManager, private val accessToken :String): ViewModel() {
-    // TODO: Implement the ViewModel
-
-
+class ContributorDetailViewModel @Inject constructor(private val networkServiceManager: NetworkServiceManager) : ViewModel() {
 
     private val compositeDisposable : CompositeDisposable = CompositeDisposable()
 
-    private val response: MutableLiveData<List<ContributorNode>> = MutableLiveData()
+    private val response: MutableLiveData<List<GitNode>> = MutableLiveData()
     private val status: MutableLiveData<RequestStatus> = MutableLiveData()
 
 
-    fun getResponse(): MutableLiveData<List<ContributorNode>> {
+    fun getResponse(): MutableLiveData<List<GitNode>>{
         return response
     }
 
@@ -32,19 +29,16 @@ class RepoDetailViewModel @Inject constructor(private val networkServiceManager:
 
 
     /*
-        Method used for fetching data from api
-     */
-    fun fetchContributors(login:String,repo: String) {
+       Method used for fetching data from api
+    */
+    fun fetchRepoByContributor(userName: String) {
 
 
         if(status.value == RequestStatus.SUCCESS) {
             return
         }
         status.value = RequestStatus.IN_PROGRESS
-        compositeDisposable.add(networkServiceManager.fetchContributors(login,repo ,accessToken)
-            .flatMapIterable { x -> x }
-            .take(20)
-            .toList()
+        compositeDisposable.add(networkServiceManager.fetchRepositoryByContributor(userName)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(this::onSuccess,this::onFailure)
@@ -52,7 +46,7 @@ class RepoDetailViewModel @Inject constructor(private val networkServiceManager:
 
     }
 
-    private fun onSuccess(response: List<ContributorNode>){
+    private fun onSuccess(response: List<GitNode>){
         this.response.value = response
         status.value = RequestStatus.SUCCESS
     }
@@ -70,5 +64,5 @@ class RepoDetailViewModel @Inject constructor(private val networkServiceManager:
         compositeDisposable.clear()
     }
 
-}
 
+}

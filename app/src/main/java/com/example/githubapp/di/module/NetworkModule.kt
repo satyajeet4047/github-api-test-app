@@ -1,6 +1,10 @@
 package com.example.githubapp.di.module
 
 import com.example.githubapp.data.NetworkService
+import com.example.githubapp.util.Constants
+import com.example.githubapp.util.Constants.Companion.ACCESS_TOKEN
+import com.example.githubapp.util.Constants.Companion.BASE_URL
+import com.example.githubapp.util.Constants.Companion.REQUEST_TIMEOUT
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -18,11 +22,7 @@ import javax.inject.Singleton
 @Module(includes = [ViewModelFactoryModule::class])
 class NetworkModule {
 
-    private val BASE_URL = "https://api.github.com/"
 
-    private var REQUEST_TIMEOUT : Long = 60
-
-    private val ACCESS_TOKEN = "3759003e75d8e3d544f87eb6385c87004cbc5bc5"
 
     @Singleton
     @Provides
@@ -46,7 +46,7 @@ class NetworkModule {
         httpClient.addInterceptor(interceptor)
         httpClient.addInterceptor { chain: Interceptor.Chain ->
             val original: Request = chain.request()
-            val requestBuilder: Request.Builder = (original as Request).newBuilder()
+            val requestBuilder: Request.Builder = (original).newBuilder()
             requestBuilder.header("Content-Type", "application/json")
             val request: Request = requestBuilder.build()
             chain.proceed(request)

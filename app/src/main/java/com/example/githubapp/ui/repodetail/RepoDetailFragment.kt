@@ -8,26 +8,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.githubapp.R
 import com.example.githubapp.data.model.ContributorNode
 import com.example.githubapp.data.model.GitNode
-import com.example.githubapp.ui.repolist.RepoListAdapter
 import com.example.githubapp.util.ImageLoaderUtil
 import com.example.githubapp.util.RequestStatus
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.repo_detail_fragment.*
-import kotlinx.android.synthetic.main.repo_list_fragment.*
 import kotlinx.android.synthetic.main.repo_list_item.*
-import kotlinx.android.synthetic.main.repo_list_item.view.*
 import javax.inject.Inject
 
 class RepoDetailFragment : Fragment() {
@@ -44,8 +41,9 @@ class RepoDetailFragment : Fragment() {
 
     private var gitNode: GitNode? = null
 
+    private var navController: NavController? = null
     private lateinit var adapter: RepoContributorAdapter
-    private lateinit var alertDialog : AlertDialog
+    private var alertDialog : AlertDialog? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,16 +58,13 @@ class RepoDetailFragment : Fragment() {
         return inflater.inflate(R.layout.repo_detail_fragment, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        var name: String? = null
-        var login : String? = null
-        gitNode?.name?.let { name = it }
-        gitNode?.owner?.login?.let { login = it }
-        if (name != null && login != null) {
-                viewModel.fetchContributors(login!!, name!!)
-        }
         setupUi()
         setupObservables()
 
@@ -78,6 +73,18 @@ class RepoDetailFragment : Fragment() {
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        var name: String? = null
+        var login : String? = null
+        gitNode?.name?.let { name = it }
+        gitNode?.owner?.login?.let { login = it }
+        if (name != null && login != null) {
+            viewModel.fetchContributors(login!!, name!!)
+        }
     }
 
 
@@ -92,7 +99,13 @@ class RepoDetailFragment : Fragment() {
         adapter = RepoContributorAdapter(imageLoaderUtil)
         adapter.setUpListener(object : RepoContributorAdapter.ItemCLickedListener {
             override fun onItemClicked(contributorNode: ContributorNode) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val bundle = bundleOf(
+                    "contributorNode" to contributorNode
+
+                )
+                navController!!.navigate(
+                    R.id.action_repoDetailFragment_to_contributorDetailFragment,
+                    bundle)
             }
 
         })
@@ -147,9 +160,19 @@ class RepoDetailFragment : Fragment() {
     private fun showProgressbar(visibility : Boolean?){
 
         when(visibility){
-            true -> pg_contributors.visibility = View.VISIBLE
-            else -> pg_contributors.visibility = View.GONE
+            true -> { pg_contributors.visibility = View.VISIBLE
+                cv_contributor_list.visibility = View.GONE
+            }
+            else -> {
+                pg_contributors.visibility = View.GONE
+                cv_contributor_list.visibility = View.VISIBLE
+            }
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        alertDialog?.let { if(it.isShowing) { it.dismiss()} }
+        viewModel.onDestroy()
+    }
 }
