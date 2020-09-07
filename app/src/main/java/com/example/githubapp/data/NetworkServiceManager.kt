@@ -1,5 +1,6 @@
 package com.example.githubapp.data
 
+import com.example.githubapp.data.model.ContributorNode
 import com.example.githubapp.data.model.GitNode
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -12,4 +13,10 @@ class NetworkServiceManager @Inject constructor(private val networkService: Netw
    fun fetchRepoList() : Observable<List<GitNode>>{
        return  networkService.fetchRepoList()
    }
+
+
+    fun fetchContributors(login:String,repoName : String, accessToken : String)
+            : Observable<List<ContributorNode>>{
+        return networkService.fetchContributors(login,repoName,accessToken)
+    }
 }

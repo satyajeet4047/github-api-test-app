@@ -22,6 +22,8 @@ class NetworkModule {
 
     private var REQUEST_TIMEOUT : Long = 60
 
+    private val ACCESS_TOKEN = "3759003e75d8e3d544f87eb6385c87004cbc5bc5"
+
     @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
@@ -57,4 +59,9 @@ class NetworkModule {
     fun provideRetrofitService(retrofit: Retrofit): NetworkService {
         return retrofit.create(NetworkService::class.java)
     }
+
+
+    @Singleton
+    @Provides
+    fun provideAccessToken(): String = ACCESS_TOKEN
 }
