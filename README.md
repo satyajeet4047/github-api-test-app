@@ -29,3 +29,7 @@ contributors
 * RxJava & RxAndroid - For asynchronous tasks
 * Picasso - To Load images from URL
 * Retrofit & OKHTTP - Handles network calls
+
+## Demo
+
+<img src="/art/app_flow.gif" width="250" height="450"/>
