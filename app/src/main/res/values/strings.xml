@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GithubApp</string>
+
+    <string name="request_error_dialog_title">Error</string>
+    <string name="request_error_dialog_message">Something went wrong while processing request</string>
+    <string name="request_error_dialog_ok_btn">ok</string>
 </resources>
