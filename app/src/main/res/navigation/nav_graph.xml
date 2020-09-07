@@ -7,7 +7,10 @@
     <fragment android:id="@+id/repoDetailFragment"
               android:name="com.example.githubapp.ui.repodetail.RepoDetailFragment"
               android:label="repo_detail_fragment"
-              tools:layout="@layout/repo_detail_fragment"/>
+              tools:layout="@layout/repo_detail_fragment">
+        <action android:id="@+id/action_repoDetailFragment_to_contributorDetailFragment"
+                app:destination="@id/contributorDetailFragment"/>
+    </fragment>
     <fragment android:id="@+id/repoListFragment"
               android:name="com.example.githubapp.ui.repolist.RepoListFragment"
               android:label="repo_list_fragment" tools:layout="@layout/repo_list_fragment">
@@ -17,5 +20,14 @@
                 app:nullable="false" />
         <action android:id="@+id/action_repoListFragment_to_repoDetailFragment2"
                 app:destination="@id/repoDetailFragment"/>
+    </fragment>
+    <fragment android:id="@+id/contributorDetailFragment"
+              android:name="com.example.githubapp.ui.contributordetail.ContributorDetailFragment"
+              android:label="contributor_detail_fragment"
+              tools:layout="@layout/contributor_detail_fragment">
+    <argument
+            android:name="contributorNode"
+            app:argType="com.example.githubapp.data.model.ContributorNode"
+            app:nullable="false" />
     </fragment>
 </navigation>

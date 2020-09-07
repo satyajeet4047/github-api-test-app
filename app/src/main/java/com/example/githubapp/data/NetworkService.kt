@@ -16,4 +16,7 @@ interface NetworkService {
     fun fetchContributors(@Path("login" , encoded = false) login : String,@Path("name" , encoded = false) repoName : String,
                           @Query("access_token") accessToken : String)
             : Observable<List<ContributorNode>>
+
+    @GET("/users/{user_name}/repos")
+    fun fetchRepositoryByContributor(@Path("user_name" , encoded = false) userName : String): Observable<List<GitNode>>
 }

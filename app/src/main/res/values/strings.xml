@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">GithubApp</string>
+    <string name="app_name">Github App</string>
 
     <string name="request_error_dialog_title">Error</string>
     <string name="request_error_dialog_message">Something went wrong while processing request</string>
-    <string name="request_error_dialog_ok_btn">ok</string>
+    <string name="request_error_dialog_ok_btn">OK</string>
     <string name="description_title">Description</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="contributors_title">Contributors</string>
+    <string name="repositories_title">Repositories</string>
 </resources>

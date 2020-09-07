@@ -10,9 +10,8 @@ import javax.inject.Singleton
 @Singleton
 class ImageLoaderUtil{
 
-    fun loadImage(imageView: ImageView,avatarUrl: String) : Boolean {
+    fun loadImage(imageView: ImageView,avatarUrl: String)  {
 
-        var isLoaded = false
         val context = imageView.context
         Picasso.with(context)
             .load(avatarUrl)
@@ -22,7 +21,7 @@ class ImageLoaderUtil{
             .networkPolicy(NetworkPolicy.OFFLINE)
             .into(imageView, object : Callback {
                 override fun onSuccess() { //..image loaded from cache
-                    isLoaded = true
+
                 }
 
                 override fun onError() { //Try again online if cache failed
@@ -33,12 +32,11 @@ class ImageLoaderUtil{
                         .error(R.drawable.ic_error_black_24dp)
                         .into(imageView, object : Callback {
                             override fun onSuccess() {
-                                isLoaded = true
+
                             }
                             override fun onError() {}
                         })
                 }
             })
-        return isLoaded
     }
 }

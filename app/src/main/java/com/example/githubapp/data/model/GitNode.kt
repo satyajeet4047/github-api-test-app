@@ -38,4 +38,4 @@ data class ContributorNode(
 
     @SerializedName("avatar_url")
     val avatarUrl : String
-)
+) : Serializable

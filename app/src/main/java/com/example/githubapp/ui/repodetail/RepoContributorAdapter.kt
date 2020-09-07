@@ -4,19 +4,12 @@ package com.example.githubapp.ui.repodetail
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubapp.R
 import com.example.githubapp.data.model.ContributorNode
-import com.example.githubapp.data.model.GitNode
 import com.example.githubapp.util.ImageLoaderUtil
-import com.squareup.picasso.Callback
-import com.squareup.picasso.NetworkPolicy
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.contributor_lis_item.view.*
-import kotlinx.android.synthetic.main.repo_list_item.view.*
-import javax.inject.Inject
 
 class RepoContributorAdapter constructor(private val imageLoaderUtil : ImageLoaderUtil): RecyclerView.Adapter<RepoContributorAdapter.DataViewHolder>() {
 
@@ -39,7 +32,7 @@ class RepoContributorAdapter constructor(private val imageLoaderUtil : ImageLoad
             }
 
         }
-        imageLoaderUtil.loadImage(holder.itemView.imgur_thumbnail,list[position].avatarUrl)
+        imageLoaderUtil.loadImage(holder.itemView.iv_contributor_thumbnail,list[position].avatarUrl)
         holder.bind(list[position])
     }
 
